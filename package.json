@@ -1,0 +1,17 @@
+{
+  "name": "virallab",
+  "version": "0.1.0",
+  "description": "Cuenta de shorts desatendida y automejorable: brief -> cerebro (opencode gratis) -> ffmpeg -> publicar -> medir -> evolucionar.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test test/",
+    "brief": "node jobs/brief.mjs",
+    "brain": "node jobs/brain.mjs",
+    "render": "node jobs/render.mjs",
+    "publish": "node jobs/publish.mjs",
+    "metrics": "node jobs/metrics.mjs",
+    "evolve": "node jobs/evolve.mjs",
+    "serve": "node server.mjs"
+  }
+}

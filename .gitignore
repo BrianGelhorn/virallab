@@ -1,0 +1,20 @@
+# deps y builds
+node_modules/
+dist/
+out/
+
+# secretos y estado local (tokens, colas generadas, renders)
+.env
+.env.*
+!.env.example
+state/
+data/*.jsonl
+
+# probes temporales de evaluacion de modelos
+.tmp/
+
+# OS / editores
+.DS_Store
+Thumbs.db
+.vscode/
+*.log
