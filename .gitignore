@@ -20,3 +20,5 @@ Thumbs.db
 *.log
 
 data/brief-*.json
+
+logs/
