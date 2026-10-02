@@ -194,6 +194,8 @@ export async function runEvolution({ force = false } = {}) {
         testRes = { ok: false, out: attempt === 2
           ? "sin cambios tras 3 intentos: el agente no implemento nada."
           : "sin cambios: no modificaste ningun archivo del worktree. EDITA los archivos indicados en el contrato, no los describas." };
+      } else if (diff.every((f) => f.startsWith("test/"))) {
+        testRes = { ok: false, out: "solo tests sin cambio funcional: el contrato pedia un cambio de comportamiento. Implementa el cambio fuente o revierte." };
       } else {
         testRes = await runTests(dir);
       }
