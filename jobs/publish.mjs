@@ -73,7 +73,9 @@ export async function publishDay(day) {
       }
     } catch (e) { v.published.facebook = { ok: false, error: String(e.message || e).slice(0, 150) }; }
 
-    v.status = "published";
+    v.status = Object.values(v.published).some((p) => p && p.ok && p.platformId)
+      ? "published"
+      : "approved"; // en seco queda approved: metrics lo saltea hasta publicar de verdad
     out.push({ id: v.id, published: v.published });
   }
   saveQueue(day, q);

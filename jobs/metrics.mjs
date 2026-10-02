@@ -18,6 +18,9 @@ export async function collectDay(day) {
   const rows = [];
   for (const v of q.videos) {
     if (v.status !== "published" || !v.published) continue;
+    // sin ningun platformId real no hay nada que medir (modo seco): saltear fila
+    const hasReal = ["youtube", "instagram", "facebook"].some((p) => v.published?.[p]?.platformId);
+    if (!hasReal) continue;
     const m = { date: new Date().toISOString(), videoId: v.id, format: v.format, category: q.category, platforms: {} };
     if (v.published.youtube?.platformId) {
       try { m.platforms.youtube = await yt.getStats(v.published.youtube.platformId); }
