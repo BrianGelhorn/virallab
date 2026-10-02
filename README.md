@@ -16,6 +16,24 @@ c/15m  jobs/publish.mjs + jobs/metrics.mjs (YouTube/IG/FB, idempotente)
 
 Dashboard: `node server.mjs` → http://localhost:3100
 
+## Experimento: evolución autónoma (supervisor/)
+
+El supervisor corre un ciclo diario (09:00 America/Argentina/Buenos_Aires o al encender):
+observar → contrato (del backlog o del análisis) → implementar en worktree aislado →
+guards + tests → reparar (×2) → activar o descartar → canary → observar/revertir.
+
+- **El LLM implementa, no decide el formato ni toca la maquinaria.** Los contratos del backlog
+  los parsea Node determinísticamente.
+- **Guards reales sobre el diff git:** `supervisor/guards.mjs` (áreas protegidas, solo
+  `opencode/*-free`, contrato completo). Un candidato vacío, solo-tests o con áreas
+  protegidas se descarta, no se activa.
+- **Versiones:** producción en `main`, candidato en worktree `evo/<fecha>`, tags móviles
+  `vl-active`/`vl-prev`, rollback por reset. Skills con lo aprendido en `.opencode/skills/`.
+- **Memoria:** `data/memory.sqlite` (episodios, experimentos, evoluciones, corridas) + JSONL.
+- Pruebas de aceptación protegidas en `test/acceptance/` (la evolución puede añadir, nunca debilitar).
+
+Ver `backlog.md` (trabajo pendiente del operador) y `n8n/workflows/virallab-*.json` (5 flujos).
+
 ## Regla de oro
 
 El LLM **solo empaqueta** un hecho verificado en guion. Nunca investiga, nunca decide formato, nunca toca `jobs/`, `platform/` ni `n8n/`. El aprendizaje es aritmética en Node (`significant()`: n≥8 por lado y gap >30%, si no a explorar). Detalles en `.opencode/skills/virallab-*/SKILL.md`.

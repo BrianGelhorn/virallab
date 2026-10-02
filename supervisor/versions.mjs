@@ -67,4 +67,20 @@ export function activeVersion() {
 export function cleanup(date) {
   try { execSync(`git worktree remove "${workdir(date)}" --force`, { cwd: ROOT, timeout: 30000 }); } catch {}
   try { execSync(`git worktree prune`, { cwd: ROOT, timeout: 30000 }); } catch {}
+  // La rama tambien se borra: si no, un proximo run "reanuda" una rama muerta.
+  try { execSync(`git branch -D evo/${date}`, { cwd: ROOT, timeout: 30000 }); } catch {}
+}
+
+// Reatacha un worktree a una rama candidata existente (resume tras crash/timeout).
+export function reattach(date) {
+  const dir = workdir(date);
+  try { execSync(`git worktree add "${dir}" evo/${date}`, { cwd: ROOT, timeout: 60000 }); } catch {}
+  return dir;
+}
+
+export function branchExists(date) {
+  try {
+    execSync(`git rev-parse --verify evo/${date}`, { cwd: ROOT, timeout: 15000 });
+    return true;
+  } catch { return false; }
 }

@@ -8,7 +8,7 @@ import { config, loadEnv } from "../lib/config.mjs";
 import { acquire, release, todayBA } from "./lock.mjs";
 import { runTurn } from "./ocode.mjs";
 import { checkDiff, checkModel, parseContract } from "./guards.mjs";
-import { startCandidate, candidateDiff, aheadCount, commitCandidate, activate, rollback, cleanup, workdir } from "./versions.mjs";
+import { startCandidate, candidateDiff, aheadCount, commitCandidate, activate, rollback, cleanup, reattach, branchExists, workdir } from "./versions.mjs";
 import { memory } from "./memory.mjs";
 import { evolve } from "../jobs/evolve.mjs";
 import { charsUsedThisMonth } from "../lib/tts.mjs";
@@ -163,23 +163,35 @@ export async function runEvolution({ force = false } = {}) {
         return { status: "rejected", why: "contrato incompleto" };
       }
     }
-    // 4. candidato en worktree aislado (sesion de implementacion)
-    const dir = startCandidate(date);
-    const implementTask =
-      `CAMBIO A IMPLEMENTAR: ${pc.contract.CAMBIO}\n` +
-      `EVIDENCIA: ${pc.contract.EVIDENCIA}\n` +
-      `COMPROBACION: ${pc.contract.COMPROBACION}\n\n` +
-      `Tu directorio de trabajo es ${dir}. EDITA los archivos ahi con tus herramientas (rutas relativas al directorio). No describas el cambio: implementalo archivo por archivo. Tambien agrega o extiende un test en test/ que verifique el cambio.\n` +
-      `Prohibido tocar: ${FORBIDDEN}. No uses credenciales ni red.\n` +
-      `Cuando termines responde: LISTO: <archivos que modificaste>`;
-    console.log(JSON.stringify({ debug_task_len: implementTask.length, debug_task_head: implementTask.slice(0, 300) }));
-    const t2 = await runTurn({
-      sessionId: sid, model: MODEL, cwd: dir,
-      task: implementTask,
-      timeoutMs: Math.min(600000, timeLeft()),
-    });
-    sid = t2.sessionId || sid;
-    console.log(JSON.stringify({ debug_implement: t2.text.slice(-300) }));
+    // 4. candidato: reanudar si hay rama con commits (crash/timeout previo),
+    // sino worktree fresco + turno de implementacion.
+    let dir, resumed = false, implementTask = "";
+    if (branchExists(date) && aheadCount(date) > 0) {
+      dir = reattach(date);
+      resumed = true;
+      log("resumed", `${aheadCount(date)} commits previos, salto implementacion`);
+    } else {
+      dir = startCandidate(date);
+      implementTask =
+        `CAMBIO A IMPLEMENTAR: ${pc.contract.CAMBIO}\n` +
+        `EVIDENCIA: ${pc.contract.EVIDENCIA}\n` +
+        `COMPROBACION: ${pc.contract.COMPROBACION}\n\n` +
+        `Tu directorio de trabajo es ${dir}. EDITA los archivos ahi con tus herramientas (rutas relativas al directorio). No describas el cambio: implementalo archivo por archivo. Tambien agrega o extiende un test en test/ que verifique el cambio.\n` +
+        `Prohibido tocar: ${FORBIDDEN}. No uses credenciales ni red.\n` +
+        `Cuando termines responde: LISTO: <archivos que modificaste>`;
+      console.log(JSON.stringify({ debug_task_len: implementTask.length, debug_task_head: implementTask.slice(0, 300) }));
+    }
+    // 4b. turno de implementacion (solo si no se reanudo; en resume el trabajo
+    // ya esta commiteado en la rama y el loop de verify/repair lo toma directo)
+    if (!resumed) {
+      const t2 = await runTurn({
+        sessionId: sid, model: MODEL, cwd: dir,
+        task: implementTask,
+        timeoutMs: Math.min(600000, timeLeft()),
+      });
+      sid = t2.sessionId || sid;
+      console.log(JSON.stringify({ debug_implement: t2.text.slice(-300) }));
+    }
     // 5. probar: commitear PRIMERO, despues guards + tests sobre lo commiteado.
     // (Chequear el diff pre-commit ve el estado anterior y deja pasar violaciones.)
     let testRes = null;
