@@ -109,7 +109,7 @@ async function main() {
 
   const q = $("queue");
   const list = Array.isArray(queue) ? queue.slice().reverse() : [];
-  if (!list.length) q.innerHTML += `<tr><td colspan="6" class="note">sin cola aún — corre el daily</td></tr>`;
+  if (!list.length) q.innerHTML += `<tr><td colspan="7" class="note">sin cola aún — corre el daily</td></tr>`;
   for (const day of list) {
     const v = day.videos?.[0] || {};
     const plat = ["youtube", "instagram", "facebook"]
@@ -120,7 +120,10 @@ async function main() {
         return `${p}: <span class="err" title="${esc(s.error || s.reason || "")}">fallo</span>`;
       })
       .join("<br>");
-    q.innerHTML += `<tr><td>${esc(day.date)}</td><td>${esc((v.HOOK || "").slice(0, 70))}</td><td>${esc(v.format || "")}</td><td>${esc(day.category || "")}</td><td class="st st-${v.status || "draft"}">${esc(v.status || "draft")}</td><td class="plat">${plat}</td></tr>`;
+    const meta = v.duration != null
+      ? `${Number(v.duration).toFixed(1)}s · ${v.tts ? '<span class="ok">tts</span>' : '<span class="err">sin tts</span>'}`
+      : "—";
+    q.innerHTML += `<tr><td>${esc(day.date)}</td><td>${esc((v.HOOK || "").slice(0, 70))}</td><td>${esc(v.format || "")}</td><td>${esc(day.category || "")}</td><td class="st st-${v.status || "draft"}">${esc(v.status || "draft")}</td><td class="meta">${meta}</td><td class="plat">${plat}</td></tr>`;
   }
   for (const e of [status, queue, metrics])
     if (e && e._error) $("sub").innerHTML += ` <span class="err-box">[api: ${esc(e._error)}]</span>`;
