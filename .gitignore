@@ -18,3 +18,5 @@ data/*.jsonl
 Thumbs.db
 .vscode/
 *.log
+
+data/brief-*.json
