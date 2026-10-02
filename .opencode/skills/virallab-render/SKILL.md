@@ -22,6 +22,8 @@ Usar cuando haya que tocar `jobs/render.mjs`.
 
 MP4 H.264 `yuv420p` 1080x1920 30fps `+faststart`, AAC 128k (o `-an` si no hay TTS). Thumbnail `-ss 2` jpg para Telegram. Verificar con `ffprobe` (ver smoke test en `.tmp/smoke-render.mjs`).
 
-## Tiempos
+## Audio: voz + sfx (ElevenLabs)
 
-Tarjetas proporcionales a caracteres; total 22s mudo o `audioDur+1.5s` con TTS (`lib/tts.mjs`, presupuesto mensual duro en `data/tts-usage.jsonl`).
+- TTS: `lib/tts.mjs` con `ELEVENLABS_TTS_MODEL` (default `eleven_v4`, fallback automatico a `eleven_multilingual_v2` si la API lo rechaza). Voz por `ELEVENLABS_VOICE_ID` (default Liam, joven social_media). Narracion = HOOK+SETUP+REVEAL+PUNCH (~320 chars/video); las tarjetas se sincronizan a la duracion real del audio (`audioDur+1.5s`), sin audio son 22s fijos.
+- SFX: `lib/sfx.mjs` genera 1 efecto/video (`eleven_text_to_sound_v2`, 1.5s, ~60 creditos) mezclado con `adelay` al inicio del payoff (REVEAL quiz / Nº1 ranking) a volumen 0.25 via `amix`. Prompts por formato en `sfxPromptFor()` (siempre "no voice, no music").
+- Presupuesto: pool mensual compartido en `data/tts-usage.jsonl` (`ELEVENLABS_CHARS_PER_MONTH`, default 40000). Sin key/saldo: video mudo sin SFX, nunca falla el render.

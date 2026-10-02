@@ -145,6 +145,16 @@ export async function renderVideo(queue, video, outDir) {
     c.file = fp;
   }
 
+  // 2b) SFX en el payoff (reveal quiz / Nº1 ranking). Opcional, no rompe nada.
+  const payoffIdx = isRank ? 3 : 2;
+  let sfx = { ok: false };
+  let sfxDelayMs = 0;
+  if (tts.ok) {
+    const { generateSfx } = await import("../lib/sfx.mjs");
+    sfxDelayMs = Math.round(cards[payoffIdx].start * 1000);
+    sfx = await generateSfx(video.format || "quiz_reveal", resolve(tmp, `${day}-01-sfx.mp3`)).catch(() => ({ ok: false }));
+  }
+
   // 3) Fondo: stock real > foto con movimiento > gradiente (fallback chain)
   const { fetchBackground } = await import("../lib/stock.mjs");
   const bg = await fetchBackground(queue.category).catch(() => ({ ok: false }));
@@ -174,14 +184,27 @@ export async function renderVideo(queue, video, outDir) {
   );
 
   const outPath = resolve(outDir, `${day}-01.mp4`);
+  // audio: voz + sfx (retrasado al payoff, bajo) mezclados; sin voz -> mudo
+  const audioInputs = [];
+  if (tts.ok) audioInputs.push("-i", audioPath);
+  if (sfx.ok) audioInputs.push("-i", resolve(tmp, `${day}-01-sfx.mp3`));
+  let audioFilter = "";
+  let audioMap = [];
+  if (tts.ok && sfx.ok) {
+    audioFilter = `;[1:a]adelay=0|0[voice];[2:a]adelay=${sfxDelayMs}|${sfxDelayMs},volume=0.25[fx];[voice][fx]amix=inputs=2:duration=first[aout]`;
+    audioMap = ["-map", "[aout]"];
+  } else if (tts.ok) {
+    audioMap = ["-map", "1:a"];
+  }
   const args = [
     "-y", ...bgInput,
-    ...(tts.ok ? ["-i", audioPath] : []),
-    "-filter_complex", filters.join(","),
+    ...audioInputs,
+    "-filter_complex", filters.join(",") + audioFilter,
     "-t", total.toFixed(2),
     "-r", String(FPS),
     "-c:v", "libx264", "-preset", "veryfast", "-crf", "20",
     "-pix_fmt", "yuv420p", "-movflags", "+faststart",
+    ...audioMap,
     ...(tts.ok ? ["-c:a", "aac", "-b:a", "128k", "-shortest"] : ["-an"]),
     outPath,
   ];
@@ -192,5 +215,5 @@ export async function renderVideo(queue, video, outDir) {
   const thumb = resolve(outDir, `${day}-01.jpg`);
   await run(config.ffmpegBin, ["-y", "-ss", "2", "-i", outPath, "-frames:v", "1", "-q:v", "4", thumb]);
 
-  return { video: outPath, thumb, duration: total, tts: tts.ok, ttsReason: tts.reason || "" };
+  return { video: outPath, thumb, duration: total, tts: tts.ok, ttsReason: tts.reason || "", ttsModel: tts.model || "", sfx: sfx.ok || false };
 }

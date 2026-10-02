@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { pickVideoFile, QUERIES } from "../lib/stock.mjs";
+import { sfxPromptFor } from "../lib/sfx.mjs";
 import { parseScriptText, validateScript } from "../lib/schema.mjs";
 import { chooseFormat } from "../jobs/brain.mjs";
 
@@ -21,6 +22,15 @@ test("QUERIES cubre las 6 categorias", () => {
   for (const c of ["espaco", "corpo", "animais", "oceano", "historia", "comida"]) {
     assert.ok((QUERIES[c] || []).length >= 2, c);
   }
+});
+
+test("sfxPromptFor: sin voz ni musica, por formato", () => {
+  for (const f of ["quiz_reveal", "ranking", "otro"]) {
+    const p = sfxPromptFor(f);
+    assert.match(p, /no voice, no music/);
+    assert.ok(p.length < 120);
+  }
+  assert.notEqual(sfxPromptFor("ranking"), sfxPromptFor("quiz_reveal"));
 });
 
 const RANK = `FORMAT: ranking
