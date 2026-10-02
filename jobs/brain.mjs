@@ -34,8 +34,56 @@ function bestFormat() {
   return best; // default quiz_reveal hasta tener evidencia
 }
 
+// Exploracion forzada: el formato con menos muestras hasta que ambos tengan >=8.
+// Despues, explota por mediana. Pura (testeable): recibe conteos, devuelve formato.
+export function chooseFormat(quizN, rankN) {
+  if (quizN < 8 || rankN < 8) return rankN < quizN ? "ranking" : "quiz_reveal";
+  return null; // null = usar bestFormat() con medianas
+}
+
+function formatCounts() {
+  const hooks = loadState("hooks.json", { formats: {} });
+  const f = hooks.formats || {};
+  return { quiz: f.quiz_reveal?.n || 0, rank: f.ranking?.n || 0 };
+}
+
+// Ranking: 3 hechos VERDADEROS del banco, misma categoria. El LLM solo ordena y empaqueta.
+function pickRankingFacts(category, excludeId) {
+  const facts = JSON.parse(readFileSync(resolve(ROOT, "data/facts.json"), "utf8"));
+  const usedPath = resolve(ROOT, "data/used.jsonl");
+  const usedLines = existsSync(usedPath) ? readFileSync(usedPath, "utf8") : "";
+  const used = new Set(
+    usedLines.split("\n").filter(Boolean).map((l) => {
+      try { return JSON.parse(l).factId; } catch { return ""; }
+    })
+  );
+  used.add(excludeId);
+  const pool = facts.filter((f) => f.category === category && !used.has(f.id));
+  const list = pool.length >= 3 ? pool : facts.filter((f) => !used.has(f.id));
+  const out = [];
+  while (out.length < 3 && list.length) out.push(list.splice(Math.floor(Math.random() * list.length), 1)[0]);
+  return out;
+}
+
 function promptFor(fact, format, lessonTxt) {
   const tip = lessonTxt ? `\nProven lesson from past videos (apply if relevant): ${lessonTxt.split("\n").filter(Boolean).slice(-3).join(" | ")}` : "";
+  if (format === "ranking") {
+    const items = fact.items.map((f, i) => `Fact ${i + 1} (keep true, shorten to 1 line): ${f.fact}`).join("\n");
+    return `Fill this exact template. No questions. No intro. No markdown. No closing.
+Topic: ${fact.topic} — rank these 3 TRUE facts from least to most surprising.
+${items}
+${tip}
+Output EXACTLY these 7 lines in Brazilian Portuguese:
+FORMAT: ranking
+HOOK: <max 12 words, e.g. "3 coisas que voce nao sabia sobre X">
+C3: <least surprising fact, 1 line>
+C2: <middle fact, 1 line>
+C1: <most surprising fact, 1 line>
+PUNCH: <max 10 words, most shareable line>
+CAPTION: <max 180 chars, ends with 1 question + 3 hashtags>
+Portuguese of Brazil, not Portugal. Never invent or embellish facts.
+Output only the 7 lines.`;
+  }
   return `Fill this exact template. No questions. No intro. No markdown. No closing.
 Topic: ${fact.topic}
 Fact (must stay true, do not embellish): ${fact.fact}
@@ -85,8 +133,17 @@ export async function brain(date) {
   const brief = existsSync(briefPath)
     ? JSON.parse(readFileSync(briefPath, "utf8"))
     : await buildBrief();
-  const format = bestFormat();
-  const task = promptFor(brief.fact, format, lessons());
+  const counts = formatCounts();
+  const forced = chooseFormat(counts.quiz, counts.rank);
+  const format = forced || bestFormat();
+  // ranking necesita 3 hechos; quiz usa el del brief
+  const factForPrompt =
+    format === "ranking"
+      ? { topic: brief.fact.category, items: pickRankingFacts(brief.fact.category, brief.fact.id) }
+      : brief.fact;
+  if (format === "ranking" && (!factForPrompt.items || factForPrompt.items.length < 3))
+    throw new Error("ranking sin 3 hechos disponibles");
+  const task = promptFor(factForPrompt, format, lessons());
 
   let script = null,
     usedModel = "";
@@ -107,9 +164,11 @@ export async function brain(date) {
   if (!script) throw new Error(`cerebro fallo en todos los modelos: ${JSON.stringify(attempts)}`);
 
   const { FORMAT, ...lines } = script;
+  const factIds = format === "ranking" ? factForPrompt.items.map((f) => f.id) : [brief.fact.id];
   const queue = {
     date: day,
-    factId: brief.fact.id,
+    factId: factIds[0],
+    factIds,
     category: brief.fact.category,
     model: usedModel,
     status: "draft",
@@ -118,8 +177,9 @@ export async function brain(date) {
   };
   mkdirSync(resolve(ROOT, "state/queue"), { recursive: true });
   writeFileSync(resolve(ROOT, `state/queue/${day}.json`), JSON.stringify(queue, null, 2));
-  // marcar hecho como usado
-  writeFileSync(resolve(ROOT, "data/used.jsonl"), JSON.stringify({ date: day, factId: brief.fact.id }) + "\n", { flag: "a" });
+  // marcar hechos como usados
+  for (const fid of factIds)
+    writeFileSync(resolve(ROOT, "data/used.jsonl"), JSON.stringify({ date: day, factId: fid }) + "\n", { flag: "a" });
   return queue;
 }
 

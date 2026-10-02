@@ -13,7 +13,8 @@ Usar cuando haya que tocar `jobs/render.mjs`.
 2. **El parser rechaza `:` de rutas Windows dentro del filtro.** Ni `\:` escapado ni `'...'` quoteado funcionan. Solucion: copiar la fuente al proyecto (`ensureFont()` -> `out/tmp/font.ttf`) y usar `textfile` con rutas relativas. Dentro del filtro no hay ningun `C:`.
 3. **Ventanas `enable` quoteadas SIN escapes de comas:** `enable='between(t,1.20,3.40)'`. Con `\,` falla.
 4. **Textos por `textfile=` (UTF-8), nunca `text=`.** Acentos PT-BR renderizan bien con Arial Bold. Pre-wrapear lineas en Node (`wrap()`: ~15 chars/linea para 88px, ~20 para 64px).
-5. **Fondo con movimiento:** `gradients` lavfi -> `scale=2160:3840,zoompan=z='1+0.04*on/N':d=N:s=1080x1920:fps=30`. Fondo estatico = peor retencion.
+5. **Fondo con movimiento:** gradiente lavfi o foto stock con `scale=2160:3840,zoompan=...`. Video stock (Pexels, `lib/stock.mjs`): `scale+crop` 9:16 + `eq=brightness=-0.4` para texto, con `-stream_loop 4`. Fondo estatico = peor retencion.
+6. **Chain de fondos:** stock video > stock foto > gradiente (`fetchBackground()` con tracking anti-repeticion 30d en `data/stock-used.jsonl`). Sin `PEXELS_API_KEY`, gradiente automatico.
 6. **Barra de progreso:** `drawbox=x=60:y=1800:w='960*t/DUR':h=10:color=#ffd166:t=fill`. Barata y sube completion.
 7. **Paleta por categoria** (`PALETTES`): fondo distinto por video = anti-repeticion visual (politica Meta "original content").
 
