@@ -14,7 +14,7 @@ Usar cuando haya que tocar `jobs/render.mjs`.
 3. **Ventanas `enable` quoteadas SIN escapes de comas:** `enable='between(t,1.20,3.40)'`. Con `\,` falla.
 4. **Textos por `textfile=` (UTF-8), nunca `text=`.** Acentos PT-BR renderizan bien con Arial Bold. Pre-wrapear lineas en Node (`wrap()`: ~15 chars/linea para 88px, ~20 para 64px).
 5. **Fondo con movimiento:** gradiente lavfi o foto stock con `scale=2160:3840,zoompan=...`. Video stock (Pexels, `lib/stock.mjs`): `scale+crop` 9:16 + `eq=brightness=-0.4` para texto, con `-stream_loop 4`. Fondo estatico = peor retencion.
-6. **Chain de fondos:** stock video > stock foto > gradiente (`fetchBackground()` con tracking anti-repeticion 30d en `data/stock-used.jsonl`). Sin `PEXELS_API_KEY`, gradiente automatico.
+6. **Chain de fondos:** Pexels video (si hay key) > NASA keyless (espaco/oceano) > Commons keyless (general) > gradiente (`fetchBackground()` en `lib/stock.mjs` con tracking anti-repeticion 30d en `data/stock-used.jsonl`). Commons/NASA son landscape: el crop 9:16 + `eq=brightness=-0.4` los deja legibles; si el clip es oscuro en bordes es el espacio real, no un bug.
 6. **Barra de progreso:** `drawbox=x=60:y=1800:w='960*t/DUR':h=10:color=#ffd166:t=fill`. Barata y sube completion.
 7. **Paleta por categoria** (`PALETTES`): fondo distinto por video = anti-repeticion visual (politica Meta "original content").
 
