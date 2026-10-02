@@ -7,6 +7,20 @@ import { renderVideo } from "./render.mjs";
 
 const ROOT = config.root;
 
+// Puro: copia la cola con duration/tts de cada resultado pegado por id.
+// Sin resultado (o cached, que no trae meta) deja el video como estaba.
+export function attachRenderMeta(queue, results) {
+  const byId = new Map((results || []).map((r) => [r.id, r]));
+  return {
+    ...queue,
+    videos: (queue.videos || []).map((v) => {
+      const r = byId.get(v.id);
+      if (!r || r.duration === undefined) return v;
+      return { ...v, duration: r.duration, tts: r.tts === true };
+    }),
+  };
+}
+
 export async function renderDay(day) {
   const qp = resolve(ROOT, `state/queue/${day}.json`);
   if (!existsSync(qp)) throw new Error(`sin cola para ${day} (corre brain primero)`);
@@ -26,6 +40,7 @@ export async function renderDay(day) {
     if (r.thumb !== thumbDest) renameSync(r.thumb, thumbDest);
     out.push({ id: v.id, duration: r.duration, tts: r.tts });
   }
+  if (out.some((r) => !r.cached)) writeFileSync(qp, JSON.stringify(attachRenderMeta(q, out), null, 2));
   return out;
 }
 
