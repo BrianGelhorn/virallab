@@ -2,12 +2,10 @@
 
 ## Pendiente
 
-- [ ] Score: subir el peso de retencion de 0.5 a 0.9 en lib/schema.mjs para priorizar watch time
-  sobre interaccion. Evidencia: la retencion es la senal mas fuerte de YouTube (ver lib/schema.mjs scoreVideo).
-  Cambio: editar el 0.5 a 0.9 en scoreVideo en lib/schema.mjs + ajustar test de score.
-  Metrica: scoreVideo pondera mas retencion.
-  Comprobacion: `npm test` en verde con el test ajustado.
+(vacio)
 
 ## Hecho
 
 - [x] Panel: mostrar duracion y TTS de cada video en la cola (activado 1fc42ed).
+- [x] Score 0.5->0.9 en lib/schema.mjs: DESCARTADO por guard (area protegida, 3 checks + 2 repairs).
+  El agente intento "arreglar la matematica" en vez de revertir: los guards son absolutos.
