@@ -8,19 +8,25 @@ import { significant, median } from "../lib/schema.mjs";
 
 const ROOT = config.root;
 
+// Pura y testeable: ante filas tardias/duplicadas, gana la ultima por videoId.
+// Asi los datos sociales tardios nunca generan conclusiones falsas.
+export function dedupeLatest(rows) {
+  const byId = new Map();
+  for (const r of rows) {
+    if (r && r.videoId && typeof r.score === "number") byId.set(r.videoId, r);
+  }
+  return [...byId.values()];
+}
+
 function loadMetrics() {
   const p = resolve(ROOT, "data/metrics.jsonl");
   if (!existsSync(p)) return [];
-  // un row por video por dia; quedarse con el ultimo por videoId
-  const byId = new Map();
+  const rows = [];
   for (const line of readFileSync(p, "utf8").split("\n")) {
     if (!line.trim()) continue;
-    try {
-      const r = JSON.parse(line);
-      if (typeof r.score === "number") byId.set(r.videoId, r);
-    } catch {}
+    try { rows.push(JSON.parse(line)); } catch {}
   }
-  return [...byId.values()];
+  return dedupeLatest(rows);
 }
 
 function groupStats(rows, key) {

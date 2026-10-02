@@ -22,3 +22,6 @@ Thumbs.db
 data/brief-*.json
 
 logs/
+
+evo/
+data/memory.sqlite*

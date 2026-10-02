@@ -1,0 +1,27 @@
+{
+  "name": "ViralLab - 4 Measure",
+  "id": "vlMeasure04dd",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "hours", "hoursInterval": 2 }] } },
+      "id": "r4-0001-4000-8000-000000000001",
+      "name": "Every 2h",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": { "command": "node C:\\dev\\virallab\\jobs\\metrics.mjs" },
+      "id": "r4-0002-4000-8000-000000000002",
+      "name": "Collect Metrics",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [450, 300]
+    }
+  ],
+  "connections": {
+    "Every 2h": { "main": [[{ "node": "Collect Metrics", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" }
+}

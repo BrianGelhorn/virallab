@@ -1,0 +1,27 @@
+{
+  "name": "ViralLab - 5 Evolve",
+  "id": "vlEvolve05ee",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "cronExpression", "cronExpression": "0 9 * * *" }] } },
+      "id": "r5-0001-4000-8000-000000000001",
+      "name": "Daily 09:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": { "command": "node C:\\dev\\virallab\\supervisor\\cycle.mjs" },
+      "id": "r5-0002-4000-8000-000000000002",
+      "name": "Evolution Cycle",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [450, 300]
+    }
+  ],
+  "connections": {
+    "Daily 09:00": { "main": [[{ "node": "Evolution Cycle", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" }
+}

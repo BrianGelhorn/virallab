@@ -1,0 +1,51 @@
+{
+  "name": "ViralLab - 2 Produce",
+  "id": "vlProduce02bb",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "cronExpression", "cronExpression": "30 4 * * *" }] } },
+      "id": "r2-0001-4000-8000-000000000001",
+      "name": "Daily 04:30",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": { "command": "node C:\\dev\\virallab\\jobs\\brain.mjs" },
+      "id": "r2-0002-4000-8000-000000000002",
+      "name": "Brain Guion",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": { "command": "node C:\\dev\\virallab\\jobs\\render-day.mjs" },
+      "id": "r2-0003-4000-8000-000000000003",
+      "name": "Render Video",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [700, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3100/notify",
+        "sendBody": true,
+        "contentType": "json",
+        "jsonBody": "={\"day\": \"{{ $now.toISO().slice(0,10) }}\"}"
+      },
+      "id": "r2-0004-4000-8000-000000000004",
+      "name": "Notify Telegram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [950, 300]
+    }
+  ],
+  "connections": {
+    "Daily 04:30": { "main": [[{ "node": "Brain Guion", "type": "main", "index": 0 }]] },
+    "Brain Guion": { "main": [[{ "node": "Render Video", "type": "main", "index": 0 }]] },
+    "Render Video": { "main": [[{ "node": "Notify Telegram", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" }
+}

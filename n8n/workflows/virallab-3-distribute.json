@@ -1,0 +1,27 @@
+{
+  "name": "ViralLab - 3 Distribute",
+  "id": "vlDistrib03cc",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "minutes", "minutesInterval": 15 }] } },
+      "id": "r3-0001-4000-8000-000000000001",
+      "name": "Every 15min",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": { "command": "node C:\\dev\\virallab\\jobs\\publish.mjs" },
+      "id": "r3-0002-4000-8000-000000000002",
+      "name": "Publish Approved",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [450, 300]
+    }
+  ],
+  "connections": {
+    "Every 15min": { "main": [[{ "node": "Publish Approved", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" }
+}

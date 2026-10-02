@@ -1,0 +1,27 @@
+{
+  "name": "ViralLab - 1 Research",
+  "id": "vlResearch01aa",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "cronExpression", "cronExpression": "0 4 * * *" }] } },
+      "id": "r1-0001-4000-8000-000000000001",
+      "name": "Daily 04:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": { "command": "node C:\\dev\\virallab\\jobs\\brief.mjs" },
+      "id": "r1-0002-4000-8000-000000000002",
+      "name": "Brief Tendencias",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [450, 300]
+    }
+  ],
+  "connections": {
+    "Daily 04:00": { "main": [[{ "node": "Brief Tendencias", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" }
+}
