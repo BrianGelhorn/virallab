@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ViralLab · Dashboard</title>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--line:#2a3340;--txt:#e6edf3;--dim:#8b949e;--acc:#ffd166;--ok:#3fb950;--warn:#d29922;--bad:#f85149}
+*{box-sizing:border-box}body{background:var(--bg);color:var(--txt);font:15px/1.5 system-ui,sans-serif;margin:0;padding:20px;max-width:1100px;margin-inline:auto}
+h1{font-size:22px;margin:0 0 4px}h2{font-size:16px;margin:26px 0 10px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+.sub{color:var(--dim);margin-bottom:18px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.card b{font-size:24px;display:block}.card span{color:var(--dim);font-size:13px}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:13px;font-weight:600}
+.on{background:#12351f;color:var(--ok)}.off{background:#3a2a10;color:var(--warn)}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-weight:600;font-size:12px;text-transform:uppercase}
+.st{font-weight:700}.st-draft{color:var(--dim)}.st-approved{color:var(--warn)}.st-published{color:var(--ok)}.st-skipped{color:var(--bad)}
+.plat{font-size:12px;color:var(--dim)}.plat .ok{color:var(--ok)}.plat .err{color:var(--bad)}
+canvas{width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:12px}
+.rank{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:700px){.rank{grid-template-columns:1fr}}
+tr.evidence td:first-child::after{content:" ●";color:var(--ok);font-size:10px}
+.note{color:var(--dim);font-size:13px}.err-box{color:var(--bad);font-size:13px}
+</style>
+</head>
+<body>
+<h1>ViralLab · Dashboard</h1>
+<div class="sub" id="sub">cargando…</div>
+
+<h2>Estado</h2>
+<div class="grid" id="status"></div>
+
+<h2>Score en el tiempo</h2>
+<canvas id="ch-score" height="180"></canvas>
+<h2>Vistas por plataforma</h2>
+<canvas id="ch-views" height="180"></canvas>
+
+<h2>Ranking (solo cambia con evidencia: n≥8 y gap&gt;30%)</h2>
+<div class="rank">
+<div><table id="rank-fmt"><tr><th>Formato</th><th>n</th><th>mediana</th></tr></table></div>
+<div><table id="rank-cat"><tr><th>Categoría</th><th>n</th><th>mediana</th></tr></table></div>
+</div>
+
+<h2>Cola (últimos 14)</h2>
+<table id="queue"><tr><th>Fecha</th><th>Hook</th><th>Formato</th><th>Cat.</th><th>Estado</th><th>Plataformas</th></tr></table>
+
+<script src="app.js"></script>
+</body>
+</html>

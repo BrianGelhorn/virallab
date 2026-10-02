@@ -3,7 +3,7 @@
 import { spawn } from "node:child_process";
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
-import { config, loadState } from "../lib/config.mjs";
+import { config, loadState , isMain} from "../lib/config.mjs";
 import { parseScriptText, validateScript } from "../lib/schema.mjs";
 import { buildBrief } from "./brief.mjs";
 
@@ -106,6 +106,7 @@ export async function brain(date) {
   }
   if (!script) throw new Error(`cerebro fallo en todos los modelos: ${JSON.stringify(attempts)}`);
 
+  const { FORMAT, ...lines } = script;
   const queue = {
     date: day,
     factId: brief.fact.id,
@@ -113,7 +114,7 @@ export async function brain(date) {
     model: usedModel,
     status: "draft",
     approvals: {},
-    videos: [{ id: `${day}-01`, format, ...script }],
+    videos: [{ id: `${day}-01`, format: FORMAT || format, ...lines }],
   };
   mkdirSync(resolve(ROOT, "state/queue"), { recursive: true });
   writeFileSync(resolve(ROOT, `state/queue/${day}.json`), JSON.stringify(queue, null, 2));
@@ -122,7 +123,7 @@ export async function brain(date) {
   return queue;
 }
 
-if (import.meta.url === `file://${process.argv[1].replaceAll("\\", "/")}`) {
+if (isMain(import.meta.url)) {
   const q = await brain();
   console.log(JSON.stringify({ date: q.date, fact: q.factId, model: q.model, hook: q.videos[0].HOOK }, null, 2));
 }

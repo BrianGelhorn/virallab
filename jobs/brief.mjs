@@ -2,7 +2,7 @@
 // Node investiga (red + banco). El LLM solo empaqueta. Nunca inventa hechos.
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
-import { config } from "../lib/config.mjs";
+import { config , isMain} from "../lib/config.mjs";
 
 const ROOT = config.root;
 const today = () => new Date().toISOString().slice(0, 10);
@@ -116,7 +116,7 @@ export async function buildBrief() {
   return brief;
 }
 
-if (import.meta.url === `file://${process.argv[1].replaceAll("\\", "/")}`) {
+if (isMain(import.meta.url)) {
   const b = await buildBrief();
   console.log(JSON.stringify({ date: b.date, scores: b.scores, fact: b.fact.id }, null, 2));
 }

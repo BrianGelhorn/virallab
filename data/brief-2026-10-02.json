@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-02",
+  "lang": "pt-BR",
+  "regionCode": "BR",
+  "scores": {
+    "espaco": 1,
+    "corpo": 1.5,
+    "animais": 1,
+    "oceano": 1,
+    "historia": 1,
+    "comida": 1
+  },
+  "signals": {
+    "wiki": {
+      "espaco": 2251,
+      "corpo": 1340,
+      "animais": 1455,
+      "oceano": 1645,
+      "historia": 0,
+      "comida": 0
+    },
+    "trends": [
+      "daily search trends",
+      "vingadores doutor destino",
+      "lidio lopes",
+      "erupção solar",
+      "solange gomes",
+      "enquete a fazenda",
+      "lulinha",
+      "sport",
+      "globoplay",
+      "platense x estudiantes"
+    ]
+  },
+  "fact": {
+    "id": "oceano-oxigenio-fitoplancton",
+    "category": "oceano",
+    "topic": "metade do oxigênio vem do oceano",
+    "fact": "O fitoplâncton do oceano produz pelo menos metade do oxigênio da Terra: cada segunda respiração vem do mar.",
+    "source": "NOAA / NASA Earth Observatory"
+  }
+}

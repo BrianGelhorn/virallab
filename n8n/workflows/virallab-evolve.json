@@ -1,0 +1,26 @@
+{
+  "name": "ViralLab - Nightly Evolve",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "cronExpression", "cronExpression": "0 23 * * *" }] } },
+      "id": "c1b2c3d4-0001-4000-8000-000000000001",
+      "name": "Nightly 23:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": { "command": "node C:\\dev\\virallab\\jobs\\evolve.mjs" },
+      "id": "c1b2c3d4-0002-4000-8000-000000000002",
+      "name": "Evolve Rankings",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [450, 300]
+    }
+  ],
+  "connections": {
+    "Nightly 23:00": { "main": [[{ "node": "Evolve Rankings", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" }
+}
