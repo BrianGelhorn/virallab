@@ -17,10 +17,10 @@ Start-Process -FilePath $node -ArgumentList "server.mjs" -WorkingDirectory $root
   -RedirectStandardError (Join-Path $logdir "server-err.log")
 Add-Content $log "server lanzado"
 
-# n8n solo si existe (npm i -g n8n una vez)
-$n8n = Get-Command n8n -ErrorAction SilentlyContinue
-if ($n8n) {
-  Start-Process -FilePath $n8n.Source -ArgumentList "start" -WorkingDirectory $root -WindowStyle Hidden
+# n8n solo si existe (npm i -g n8n una vez). Se lanza via .cmd: el shim .ps1 no arranca con Start-Process.
+$n8nCmd = Join-Path $env:APPDATA "npm\n8n.cmd"
+if (Test-Path $n8nCmd) {
+  Start-Process -FilePath "cmd.exe" -ArgumentList "/c", "`"$n8nCmd`" start" -WorkingDirectory $root -WindowStyle Hidden
   Add-Content $log "n8n lanzado"
 } else {
   Add-Content $log "n8n no instalado: npm i -g n8n (los jobs igual corren con node jobs/*.mjs)"
