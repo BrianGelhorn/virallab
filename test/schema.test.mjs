@@ -92,3 +92,16 @@ test("factOverlap detecta deriva de tema", async () => {
   assert.equal(factOverlap(moonScript, moonFact, 2), true);
   assert.equal(factOverlap(octoScript, moonFact, 2), false);
 });
+
+test("karaoke ASS: tiempos y grupos", async () => {
+  const { fmtAss, buildAss } = await import("../lib/karaoke.mjs");
+  assert.equal(fmtAss(61.25), "0:01:01.25");
+  assert.equal(fmtAss(0), "0:00:00.00");
+  const words = [
+    { w: "Seu", start: 0.1, end: 0.3 }, { w: "sangue", start: 0.3, end: 0.7 },
+    { w: "e", start: 0.7, end: 0.8 }, { w: "vermelho", start: 0.8, end: 1.4 },
+  ];
+  const ass = buildAss(words);
+  assert.match(ass, /PlayResX: 1080/);
+  assert.match(ass, /Dialogue: 0,0:00:00.10,0:00:01.52/);
+});
