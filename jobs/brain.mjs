@@ -4,7 +4,7 @@ import { spawn } from "node:child_process";
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { config, loadState , isMain} from "../lib/config.mjs";
-import { parseScriptText, validateScript } from "../lib/schema.mjs";
+import { parseScriptText, validateScript, factOverlap } from "../lib/schema.mjs";
 import { buildBrief } from "./brief.mjs";
 
 const ROOT = config.root;
@@ -65,7 +65,20 @@ function pickRankingFacts(category, excludeId) {
   return out;
 }
 
-function promptFor(fact, format, lessonTxt) {
+// Estilo de hook: UNO por dia, rotado por Node. Tres opciones MUST en un prompt
+// cuelgan al modelo debil (loop de razonamiento). Un patron simple vuela.
+const HOOK_STYLES = {
+  paradoxo: `HOOK: <max 8 words, an impossible-sounding statement that is true, e.g. 'A Lua gira e nunca mostra o outro lado'>`,
+  numero: `HOOK: <max 8 words, a number plus mystery, e.g. '27 dias. Sempre o mesmo lado.'>`,
+  aposta: `HOOK: <max 8 words, a bet against the viewer starting with 'Aposto que', e.g. 'Aposto que voce respira por causa do mar'>`,
+};
+export function hookStyleFor(dateStr) {
+  const keys = Object.keys(HOOK_STYLES);
+  const n = Number(String(dateStr).replaceAll("-", "") || 0);
+  return keys[n % keys.length];
+}
+
+export function promptFor(fact, format, lessonTxt, hookStyle = "paradoxo") {
   const tip = lessonTxt ? `\nProven lesson from past videos (apply if relevant): ${lessonTxt.split("\n").filter(Boolean).slice(-3).join(" | ")}` : "";
   if (format === "ranking") {
     const items = fact.items.map((f, i) => `Fact ${i + 1} (keep true, shorten to 1 line): ${f.fact}`).join("\n");
@@ -75,13 +88,13 @@ ${items}
 ${tip}
 Output EXACTLY these 7 lines in Brazilian Portuguese:
 FORMAT: ranking
-HOOK: <max 12 words, e.g. "3 coisas que voce nao sabia sobre X">
-C3: <least surprising fact, 1 line>
-C2: <middle fact, 1 line>
-C1: <most surprising fact, 1 line>
+${HOOK_STYLES[hookStyle] || HOOK_STYLES.paradoxo}
+C3: <least surprising fact, 1 short line>
+C2: <middle fact, 1 short line>
+C1: <most surprising fact, 1 short line>
 PUNCH: <max 10 words, most shareable line>
 CAPTION: <max 180 chars, ends with 1 question + 3 hashtags>
-Portuguese of Brazil, not Portugal. Never invent or embellish facts.
+Write with tension like a mystery, never like a teacher. Never invent or embellish facts. Portuguese of Brazil, not Portugal.
 Output only the 7 lines.`;
   }
   return `Fill this exact template. No questions. No intro. No markdown. No closing.
@@ -90,12 +103,12 @@ Fact (must stay true, do not embellish): ${fact.fact}
 ${tip}
 Output EXACTLY these 6 lines in Brazilian Portuguese:
 FORMAT: ${format}
-HOOK: <max 12 words, creates curiosity in 1 second>
-SETUP: <max 15 words>
-REVEAL: <1 sentence, states the fact>
+${HOOK_STYLES[hookStyle] || HOOK_STYLES.paradoxo}
+SETUP: <max 12 words, raises the tension, does not explain yet>
+REVEAL: <max 100 chars, 1 sentence, states the fact like a secret revealed>
 PUNCH: <max 10 words, most shareable line>
 CAPTION: <max 180 chars, ends with 1 question + 3 hashtags>
-Portuguese of Brazil, not Portugal. The REVEAL must be a true verifiable fact.
+Write with tension like a mystery, never like a teacher. Never start with Voce sabia or a greeting. Portuguese of Brazil, not Portugal.
 Output only the 6 lines.`;
 }
 
@@ -104,6 +117,7 @@ function runModel(model, task, timeoutMs = 120000) {
     const p = spawn("opencode", ["run", "--model", model, "--format", "json", task], {
       shell: true,
       cwd: ROOT,
+      stdio: ["ignore", "pipe", "pipe"], // sin esto opencode se bloquea esperando stdin heredado
     });
     let out = "";
     p.stdout.on("data", (d) => (out += d));
@@ -143,28 +157,45 @@ export async function brain(date) {
       : brief.fact;
   if (format === "ranking" && (!factForPrompt.items || factForPrompt.items.length < 3))
     throw new Error("ranking sin 3 hechos disponibles");
-  const task = promptFor(factForPrompt, format, lessons());
+  const task = promptFor(factForPrompt, format, lessons(), hookStyleFor(day));
 
   let script = null,
     usedModel = "";
   const attempts = [];
-  for (const m of MODELS) {
-    const r = await runModel(m, task);
-    const s = parseScriptText(r.text);
-    // forzar el formato elegido por Node (el LLM no decide formato)
-    s.FORMAT = format;
-    const v = validateScript(s);
-    attempts.push({ model: m, ok: v.ok, errors: v.errors });
-    if (v.ok) {
-      script = s;
-      usedModel = m;
-      break;
+  // 2 pasadas por la lista: los modelos gratis tienen ventanas degradadas
+  // donde responden chateo en vez del template. Reintentar es mas barato que fallar.
+  for (let pass = 0; pass < 2 && !script; pass++) {
+    for (const m of MODELS) {
+      if (script) break;
+      if (pass > 0) await new Promise((r) => setTimeout(r, 15000 * pass));
+      const r = await runModel(m, task);
+      const s = parseScriptText(r.text);
+      // forzar el formato elegido por Node (el LLM no decide formato)
+      s.FORMAT = format;
+      const v = validateScript(s);
+      // anti-deriva: el guion debe hablar del hecho asignado, no de otro tema
+      if (v.ok) {
+        const scriptCore = format === "ranking" ? [s.C3, s.C2, s.C1].join(" ") : `${s.SETUP} ${s.REVEAL}`;
+        const factCore = format === "ranking" ? factForPrompt.items.map((f) => f.fact).join(" ") : factForPrompt.fact;
+        if (!factOverlap(scriptCore, factCore, format === "ranking" ? 4 : 2)) {
+          v.ok = false;
+          v.errors.push("deriva de tema (sin overlap con el hecho)");
+        }
+      }
+      attempts.push({ model: m, ok: v.ok, errors: v.errors });
+      if (v.ok) {
+        script = s;
+        usedModel = m;
+      } else if (pass === 1) {
+        console.log(JSON.stringify({ debug_raw: r.text.slice(0, 300) }));
+      }
     }
   }
   if (!script) throw new Error(`cerebro fallo en todos los modelos: ${JSON.stringify(attempts)}`);
 
   const { FORMAT, ...lines } = script;
   const factIds = format === "ranking" ? factForPrompt.items.map((f) => f.id) : [brief.fact.id];
+  const stockQuery = format === "ranking" ? factForPrompt.items[0].stock || "" : brief.fact.stock || "";
   const queue = {
     date: day,
     factId: factIds[0],
@@ -173,7 +204,7 @@ export async function brain(date) {
     model: usedModel,
     status: "draft",
     approvals: {},
-    videos: [{ id: `${day}-01`, format: FORMAT || format, ...lines }],
+    videos: [{ id: `${day}-01`, format: FORMAT || format, stock: stockQuery, ...lines }],
   };
   mkdirSync(resolve(ROOT, "state/queue"), { recursive: true });
   writeFileSync(resolve(ROOT, `state/queue/${day}.json`), JSON.stringify(queue, null, 2));

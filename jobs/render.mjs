@@ -155,9 +155,9 @@ export async function renderVideo(queue, video, outDir) {
     sfx = await generateSfx(video.format || "quiz_reveal", resolve(tmp, `${day}-01-sfx.mp3`)).catch(() => ({ ok: false }));
   }
 
-  // 3) Fondo: stock real > foto con movimiento > gradiente (fallback chain)
+  // 3) Fondo: query exacta del dato > stock categoria > foto > gradiente
   const { fetchBackground } = await import("../lib/stock.mjs");
-  const bg = await fetchBackground(queue.category).catch(() => ({ ok: false }));
+  const bg = await fetchBackground(queue.category, video.stock || "").catch(() => ({ ok: false }));
   let bgInput, bgFilter;
   if (bg.ok && bg.kind === "video") {
     // loop para cubrir el total + recorte 9:16 + oscurecido para texto
@@ -177,7 +177,7 @@ export async function renderVideo(queue, video, outDir) {
     );
   }
   // etiqueta de categoria arriba + barra de progreso abajo
-  const kicker = isRank ? "TOP 3" : "SABIAS QUE?";
+  const kicker = isRank ? "TOP 3" : "SABIA QUE?";
   filters.push(
     `drawtext=fontfile=${font}:text='${(queue.category || "").toUpperCase()} - ${kicker}':fontsize=44:fontcolor=#ffd166:x=(w-text_w)/2:y=240:enable='lt(t,${cards[0].end.toFixed(2)})'`,
     `drawbox=x=60:y=${H - 120}:w='960*t/${total.toFixed(2)}':h=10:color=#ffd166:t=fill`

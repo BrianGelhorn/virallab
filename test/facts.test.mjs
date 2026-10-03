@@ -30,3 +30,7 @@ test("cobertura minima: >=4 hechos por categoria", () => {
 test("hechos caben en tarjetas (fact <= 160 chars)", () => {
   for (const f of facts) assert.ok(f.fact.length <= 160, `${f.id}: ${f.fact.length}`);
 });
+
+test("todo hecho tiene query de stock especifica", () => {
+  for (const f of facts) assert.ok(f.stock && f.stock.length >= 3, `${f.id} sin stock`);
+});

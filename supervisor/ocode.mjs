@@ -26,7 +26,11 @@ export function runTurn({ sessionId = null, title = null, task, model, cwd, time
     if (sessionId) args.push("--session", sessionId);
     else if (title) args.push("--title", title);
     args.push(task);
-    const p = spawn("opencode", args, { shell: true, cwd });
+    const p = spawn("opencode", args, {
+      shell: true,
+      cwd,
+      stdio: ["ignore", "pipe", "pipe"], // sin esto opencode se bloquea esperando stdin heredado
+    });
     let out = "";
     p.stdout.on("data", (d) => (out += d));
     p.stderr.on("data", (d) => (out += d));

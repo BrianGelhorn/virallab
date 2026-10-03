@@ -1,32 +1,242 @@
 [
-  {"id":"espaco-lua-mesmo-lado","category":"espaco","topic":"por que a Lua mostra sempre o mesmo lado","fact":"A Lua completa uma rotação a cada 27,3 dias, exatamente o mesmo período que leva para orbitar a Terra, por isso vemos sempre o mesmo hemisfério.","source":"NASA Moon facts"},
-  {"id":"espaco-venus-dia-ano","category":"espaco","topic":"um dia em Vênus dura mais que um ano","fact":"Vênus gira sobre si mesma em 243 dias terrestres, mas orbita o Sol em apenas 225 dias: um dia venusiano e mais longo que um ano venusiano.","source":"NASA Vênus facts"},
-  {"id":"espaco-estrelas-neutrons","category":"espaco","topic":"estrelas que giram 600 vezes por segundo","fact":"Estrelas de nêutrons, os restos de supernovas, podem girar ate 600 vezes por segundo, mais rapido que um liquidificador.","source":"NASA / pulsares de milissegundos"},
-  {"id":"espaco-saturno-flutua","category":"espaco","topic":"Saturno flutuaria na água","fact":"Saturno tem densidade média de 0,687 g/cm3, menor que a da agua: numa piscina gigante hipotética, ele flutuaria.","source":"NASA Saturn facts"},
-  {"id":"espaco-pegadas-lua","category":"espaco","topic":"pegadas na Lua duram milhões de anos","fact":"Sem vento nem agua na Lua, as pegadas dos astronautas da Apollo podem durar milhoes de anos intactas.","source":"NASA Apollo"},
-  {"id":"corpo-nariz-cheiros","category":"corpo","topic":"o nariz detecta 1 trilhão de cheiros","fact":"Pesquisadores calcularam que o nariz humano consegue distinguir cerca de 1 trilhão de odores diferentes, muito mais que os 10 mil que se acreditava.","source":"Science, 2014"},
-  {"id":"corpo-ossos-concreto","category":"corpo","topic":"ossos são mais fortes que concreto","fact":"Onça por onça, o osso cortical humano suporta mais compressão que o concreto: cerca de 200 MPa contra 40 MPa.","source":"fisiologia / ciencia dos materiais"},
-  {"id":"corpo-cantarolar-nariz","category":"corpo","topic":"impossível cantarolar de nariz tampado","fact":"É impossível cantarolar com o nariz tampado, porque o som do cantarolar precisa escapar pelas vias nasais.","source":"fisiologia (teste você mesmo)"},
-  {"id":"corpo-arrepio-vestigio","category":"corpo","topic":"arrepios são um vestígio evolutivo","fact":"O arrepio é a piloereção, o mesmo reflexo que ouriça os pelos dos mamíferos para parecer maiores diante de ameaças.","source":"biologia evolutiva"},
-  {"id":"corpo-estomago-novo","category":"corpo","topic":"o estômago se renova a cada poucos dias","fact":"O revestimento do estômago se renova a cada 3 a 4 dias, para nao ser digerido pelo próprio ácido.","source":"fisiologia"},
-  {"id":"animais-polvo-coracoes","category":"animais","topic":"polvos têm 3 corações e sangue azul","fact":"O polvo tem três corações e sangue azul, porque usa hemocianina à base de cobre em vez de hemoglobina.","source":"biologia marinha"},
-  {"id":"animais-abelhas-rostos","category":"animais","topic":"abelhas reconhecem rostos humanos","fact":"As abelhas conseguem reconhecer rostos humanos individuais, usando o mesmo tipo de processamento visual que nos usamos.","source":"Journal of Experimental Biology, 2010"},
-  {"id":"animais-tardigrados-espaco","category":"animais","topic":"tardígrados sobreviveram no espaço aberto","fact":"Em 2007, a missão FOTON-M3 da ESA levou tardígrados ao espaço aberto e muitos sobreviveram ao vácuo e à radiação.","source":"ESA FOTON-M3, 2007"},
-  {"id":"animais-camarao-coracao","category":"animais","topic":"o coração do camarão fica na cabeça","fact":"O coração do camarão fica no cefalotórax, a regiao que para nos seria a cabeça, junto dos órgãos vitais.","source":"biologia marinha"},
-  {"id":"animais-corvos-rostos","category":"animais","topic":"corvos lembram de rostos por anos","fact":"Os corvos reconhecem rostos humanos individuais por anos e ensinam os filhotes a desconfiar das mesmas pessoas.","source":"University of Washington / John Marzluff"},
-  {"id":"oceano-inexplorado","category":"oceano","topic":"mais de 80% do oceano não mapeado","fact":"Mais de 80% do fundo do oceano permanece sem mapeamento detalhado, segundo a NOAA.","source":"NOAA"},
-  {"id":"oceano-fossa-marianas","category":"oceano","topic":"a Fossa das Marianas é mais funda que o Everest é alto","fact":"A A Fossa das Marianas chega a 10.935 metros de profundidade, mais que os 8.849 metros de altura do Everest.","source":"NOAA / levantamentos"},
-  {"id":"oceano-som-agua","category":"oceano","topic":"o som viaja 4,5x mais rápido na água","fact":"O som viaja cerca de 4,5 vezes mais rápido na água do que no ar, por isso baleias se comunicam a milhares de quilômetros.","source":"fisica / NOAA"},
-  {"id":"oceano-oxigenio-fitoplancton","category":"oceano","topic":"metade do oxigênio vem do oceano","fact":"O fitoplâncton do oceano produz pelo menos metade do oxigênio da Terra: cada segunda respiração vem do mar.","source":"NOAA / NASA Earth Observatory"},
-  {"id":"oceano-barreira-corais","category":"oceano","topic":"a Grande Barreira de Corais é visível do espaço","fact":"A Grande Barreira de Corais, na Australia, e a maior estrutura viva do planeta e pode ser vista do espaço.","source":"NASA / UNESCO"},
-  {"id":"historia-cleopatra-iphone","category":"historia","topic":"Cleópatra viveu mais perto do iPhone que das pirâmides","fact":"Cleópatra viveu em 30 a.C., cerca de 2.530 anos depois das pirâmides de Gizé e 2.037 anos antes do iPhone de 2007.","source":"cronologia historica"},
-  {"id":"historia-oxford-astecas","category":"historia","topic":"Oxford é mais antiga que o Império Asteca","fact":"A Universidade de Oxford já ensinava em 1096, mais de 300 anos antes da fundacao do Império Asteca em 1425.","source":"Oxford / cronologia"},
-  {"id":"historia-nintendo-1889","category":"historia","topic":"a Nintendo nasceu em 1889 fazendo cartas","fact":"A Nintendo foi fundada em 1889 em Quioto para fabricar cartas de baralho hanafuda, 90 anos antes dos videogames.","source":"Nintendo / historia corporativa"},
-  {"id":"historia-torre-eiffel-verao","category":"historia","topic":"a Torre Eiffel cresce 15 cm no verão","fact":"Por dilatação térmica, a Torre Eiffel pode ficar ate 15 centimetros mais alta nos dias quentes de verão.","source":"Societe d'Exploitation de la Tour Eiffel"},
-  {"id":"historia-mamutes-piramides","category":"historia","topic":"mamutes ainda existiam quando as pirâmides foram construídas","fact":"Os últimos mamutes da Ilha Wrangel viveram até cerca de 1700 a.C., quase mil anos depois das pirâmides de Gizé.","source":"Nature / datacao por radiocarbono"},
-  {"id":"comida-mel-nunca-estraga","category":"comida","topic":"mel de 3 mil anos ainda comestível","fact":"Arqueólogos encontraram mel de 3 mil anos em tumbas egípcias ainda comestível: o mel praticamente nunca estraga.","source":"National Geographic / arqueologia"},
-  {"id":"comida-amendoim-dinamite","category":"comida","topic":"amendoim é usado para fazer dinamite","fact":"O óleo de amendoim pode ser processado até glicerol, matéria-prima da nitroglicerina usada em explosivos.","source":"quimica / USDA"},
-  {"id":"comida-maca-flutua","category":"comida","topic":"maçãs flutuam porque são 25% ar","fact":"Maçãs flutuam porque cerca de 25% do seu volume é ar preso entre as células da polpa.","source":"USDA"},
-  {"id":"comida-banana-radioativa","category":"comida","topic":"bananas são naturalmente radioativas","fact":"Bananas contêm potássio-40 radioativo: existe ate uma unidade de medida informal chamada dose equivalente banana.","source":"fisica / EPA"},
-  {"id":"comida-ketchup-remedio","category":"comida","topic":"ketchup já foi vendido como remédio","fact":"Na década de 1830, o ketchup foi comercializado nos EUA como remédio para indigestão e problemas hepáticos.","source":"historia / Smithsonian"}
+ {
+  "id": "espaco-lua-mesmo-lado",
+  "category": "espaco",
+  "topic": "por que a Lua mostra sempre o mesmo lado",
+  "fact": "A Lua completa uma rotação a cada 27,3 dias, exatamente o mesmo período que leva para orbitar a Terra, por isso vemos sempre o mesmo hemisfério.",
+  "source": "NASA Moon facts",
+  "stock": "moon surface closeup"
+ },
+ {
+  "id": "espaco-venus-dia-ano",
+  "category": "espaco",
+  "topic": "um dia em Vênus dura mais que um ano",
+  "fact": "Vênus gira sobre si mesma em 243 dias terrestres, mas orbita o Sol em apenas 225 dias: um dia venusiano e mais longo que um ano venusiano.",
+  "source": "NASA Vênus facts",
+  "stock": "venus planet"
+ },
+ {
+  "id": "espaco-estrelas-neutrons",
+  "category": "espaco",
+  "topic": "estrelas que giram 600 vezes por segundo",
+  "fact": "Estrelas de nêutrons, os restos de supernovas, podem girar ate 600 vezes por segundo, mais rapido que um liquidificador.",
+  "source": "NASA / pulsares de milissegundos",
+  "stock": "starry night sky timelapse"
+ },
+ {
+  "id": "espaco-saturno-flutua",
+  "category": "espaco",
+  "topic": "Saturno flutuaria na água",
+  "fact": "Saturno tem densidade média de 0,687 g/cm3, menor que a da agua: numa piscina gigante hipotética, ele flutuaria.",
+  "source": "NASA Saturn facts",
+  "stock": "saturn planet rings"
+ },
+ {
+  "id": "espaco-pegadas-lua",
+  "category": "espaco",
+  "topic": "pegadas na Lua duram milhões de anos",
+  "fact": "Sem vento nem agua na Lua, as pegadas dos astronautas da Apollo podem durar milhoes de anos intactas.",
+  "source": "NASA Apollo",
+  "stock": "astronaut moon landing"
+ },
+ {
+  "id": "corpo-nariz-cheiros",
+  "category": "corpo",
+  "topic": "o nariz detecta 1 trilhão de cheiros",
+  "fact": "Pesquisadores calcularam que o nariz humano consegue distinguir cerca de 1 trilhão de odores diferentes, muito mais que os 10 mil que se acreditava.",
+  "source": "Science, 2014",
+  "stock": "smelling flower closeup"
+ },
+ {
+  "id": "corpo-ossos-concreto",
+  "category": "corpo",
+  "topic": "ossos são mais fortes que concreto",
+  "fact": "Onça por onça, o osso cortical humano suporta mais compressão que o concreto: cerca de 200 MPa contra 40 MPa.",
+  "source": "fisiologia / ciencia dos materiais",
+  "stock": "human skeleton xray"
+ },
+ {
+  "id": "corpo-cantarolar-nariz",
+  "category": "corpo",
+  "topic": "impossível cantarolar de nariz tampado",
+  "fact": "É impossível cantarolar com o nariz tampado, porque o som do cantarolar precisa escapar pelas vias nasais.",
+  "source": "fisiologia (teste você mesmo)",
+  "stock": "woman singing portrait"
+ },
+ {
+  "id": "corpo-arrepio-vestigio",
+  "category": "corpo",
+  "topic": "arrepios são um vestígio evolutivo",
+  "fact": "O arrepio é a piloereção, o mesmo reflexo que ouriça os pelos dos mamíferos para parecer maiores diante de ameaças.",
+  "source": "biologia evolutiva",
+  "stock": "goosebumps skin macro"
+ },
+ {
+  "id": "corpo-estomago-novo",
+  "category": "corpo",
+  "topic": "o estômago se renova a cada poucos dias",
+  "fact": "O revestimento do estômago se renova a cada 3 a 4 dias, para nao ser digerido pelo próprio ácido.",
+  "source": "fisiologia",
+  "stock": "human anatomy body"
+ },
+ {
+  "id": "animais-polvo-coracoes",
+  "category": "animais",
+  "topic": "polvos têm 3 corações e sangue azul",
+  "fact": "O polvo tem três corações e sangue azul, porque usa hemocianina à base de cobre em vez de hemoglobina.",
+  "source": "biologia marinha",
+  "stock": "octopus underwater"
+ },
+ {
+  "id": "animais-abelhas-rostos",
+  "category": "animais",
+  "topic": "abelhas reconhecem rostos humanos",
+  "fact": "As abelhas conseguem reconhecer rostos humanos individuais, usando o mesmo tipo de processamento visual que nos usamos.",
+  "source": "Journal of Experimental Biology, 2010",
+  "stock": "honeybee flower macro"
+ },
+ {
+  "id": "animais-tardigrados-espaco",
+  "category": "animais",
+  "topic": "tardígrados sobreviveram no espaço aberto",
+  "fact": "Em 2007, a missão FOTON-M3 da ESA levou tardígrados ao espaço aberto e muitos sobreviveram ao vácuo e à radiação.",
+  "source": "ESA FOTON-M3, 2007",
+  "stock": "microscope cells moving"
+ },
+ {
+  "id": "animais-camarao-coracao",
+  "category": "animais",
+  "topic": "o coração do camarão fica na cabeça",
+  "fact": "O coração do camarão fica no cefalotórax, a regiao que para nos seria a cabeça, junto dos órgãos vitais.",
+  "source": "biologia marinha",
+  "stock": "shrimp underwater"
+ },
+ {
+  "id": "animais-corvos-rostos",
+  "category": "animais",
+  "topic": "corvos lembram de rostos por anos",
+  "fact": "Os corvos reconhecem rostos humanos individuais por anos e ensinam os filhotes a desconfiar das mesmas pessoas.",
+  "source": "University of Washington / John Marzluff",
+  "stock": "crow raven closeup"
+ },
+ {
+  "id": "oceano-inexplorado",
+  "category": "oceano",
+  "topic": "mais de 80% do oceano não mapeado",
+  "fact": "Mais de 80% do fundo do oceano permanece sem mapeamento detalhado, segundo a NOAA.",
+  "source": "NOAA",
+  "stock": "deep dark ocean water"
+ },
+ {
+  "id": "oceano-fossa-marianas",
+  "category": "oceano",
+  "topic": "a Fossa das Marianas é mais funda que o Everest é alto",
+  "fact": "A A Fossa das Marianas chega a 10.935 metros de profundidade, mais que os 8.849 metros de altura do Everest.",
+  "source": "NOAA / levantamentos",
+  "stock": "deep blue underwater"
+ },
+ {
+  "id": "oceano-som-agua",
+  "category": "oceano",
+  "topic": "o som viaja 4,5x mais rápido na água",
+  "fact": "O som viaja cerca de 4,5 vezes mais rápido na água do que no ar, por isso baleias se comunicam a milhares de quilômetros.",
+  "source": "fisica / NOAA",
+  "stock": "humpback whale underwater"
+ },
+ {
+  "id": "oceano-oxigenio-fitoplancton",
+  "category": "oceano",
+  "topic": "metade do oxigênio vem do oceano",
+  "fact": "O fitoplâncton do oceano produz pelo menos metade do oxigênio da Terra: cada segunda respiração vem do mar.",
+  "source": "NOAA / NASA Earth Observatory",
+  "stock": "ocean surface aerial waves"
+ },
+ {
+  "id": "oceano-barreira-corais",
+  "category": "oceano",
+  "topic": "a Grande Barreira de Corais é visível do espaço",
+  "fact": "A Grande Barreira de Corais, na Australia, e a maior estrutura viva do planeta e pode ser vista do espaço.",
+  "source": "NASA / UNESCO",
+  "stock": "coral reef diving"
+ },
+ {
+  "id": "historia-cleopatra-iphone",
+  "category": "historia",
+  "topic": "Cleópatra viveu mais perto do iPhone que das pirâmides",
+  "fact": "Cleópatra viveu em 30 a.C., cerca de 2.530 anos depois das pirâmides de Gizé e 2.037 anos antes do iPhone de 2007.",
+  "source": "cronologia historica",
+  "stock": "egypt pyramids sphinx"
+ },
+ {
+  "id": "historia-oxford-astecas",
+  "category": "historia",
+  "topic": "Oxford é mais antiga que o Império Asteca",
+  "fact": "A Universidade de Oxford já ensinava em 1096, mais de 300 anos antes da fundacao do Império Asteca em 1425.",
+  "source": "Oxford / cronologia",
+  "stock": "old university library"
+ },
+ {
+  "id": "historia-nintendo-1889",
+  "category": "historia",
+  "topic": "a Nintendo nasceu em 1889 fazendo cartas",
+  "fact": "A Nintendo foi fundada em 1889 em Quioto para fabricar cartas de baralho hanafuda, 90 anos antes dos videogames.",
+  "source": "Nintendo / historia corporativa",
+  "stock": "kyoto japan temple"
+ },
+ {
+  "id": "historia-torre-eiffel-verao",
+  "category": "historia",
+  "topic": "a Torre Eiffel cresce 15 cm no verão",
+  "fact": "Por dilatação térmica, a Torre Eiffel pode ficar ate 15 centimetros mais alta nos dias quentes de verão.",
+  "source": "Societe d'Exploitation de la Tour Eiffel",
+  "stock": "eiffel tower paris"
+ },
+ {
+  "id": "historia-mamutes-piramides",
+  "category": "historia",
+  "topic": "mamutes ainda existiam quando as pirâmides foram construídas",
+  "fact": "Os últimos mamutes da Ilha Wrangel viveram até cerca de 1700 a.C., quase mil anos depois das pirâmides de Gizé.",
+  "source": "Nature / datacao por radiocarbono",
+  "stock": "egypt pyramids desert"
+ },
+ {
+  "id": "comida-mel-nunca-estraga",
+  "category": "comida",
+  "topic": "mel de 3 mil anos ainda comestível",
+  "fact": "Arqueólogos encontraram mel de 3 mil anos em tumbas egípcias ainda comestível: o mel praticamente nunca estraga.",
+  "source": "National Geographic / arqueologia",
+  "stock": "honey dripping dipper"
+ },
+ {
+  "id": "comida-amendoim-dinamite",
+  "category": "comida",
+  "topic": "amendoim é usado para fazer dinamite",
+  "fact": "O óleo de amendoim pode ser processado até glicerol, matéria-prima da nitroglicerina usada em explosivos.",
+  "source": "quimica / USDA",
+  "stock": "peanuts harvest"
+ },
+ {
+  "id": "comida-maca-flutua",
+  "category": "comida",
+  "topic": "maçãs flutuam porque são 25% ar",
+  "fact": "Maçãs flutuam porque cerca de 25% do seu volume é ar preso entre as células da polpa.",
+  "source": "USDA",
+  "stock": "red apple water splash"
+ },
+ {
+  "id": "comida-banana-radioativa",
+  "category": "comida",
+  "topic": "bananas são naturalmente radioativas",
+  "fact": "Bananas contêm potássio-40 radioativo: existe ate uma unidade de medida informal chamada dose equivalente banana.",
+  "source": "fisica / EPA",
+  "stock": "bananas bunch closeup"
+ },
+ {
+  "id": "comida-ketchup-remedio",
+  "category": "comida",
+  "topic": "ketchup já foi vendido como remédio",
+  "fact": "Na década de 1830, o ketchup foi comercializado nos EUA como remédio para indigestão e problemas hepáticos.",
+  "source": "historia / Smithsonian",
+  "stock": "tomatoes harvest field"
+ }
 ]

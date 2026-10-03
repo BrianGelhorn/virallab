@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  parseScriptText, validateScript, scoreVideo, significant, median,
+  parseScriptText, validateScript, scoreVideo, significant, median, hookAlive,
 } from "../lib/schema.mjs";
 
 const GOOD = `FORMAT: quiz_reveal
@@ -64,4 +64,31 @@ test("median par e impar", () => {
   assert.equal(median([3, 1, 2]), 2);
   assert.equal(median([4, 1, 3, 2]), 2.5);
   assert.equal(median([]), 0);
+});
+
+test("hookAlive veta aperturas muertas", () => {
+  assert.equal(hookAlive("Você sabia que a Lua gira?"), false);
+  assert.equal(hookAlive("Sabias que el mar respira?"), false);
+  assert.equal(hookAlive("A Lua gira e nunca mostra o outro lado"), true);
+  assert.equal(hookAlive("27 dias. Sempre o mesmo lado."), true);
+});
+
+test("validateScript rechaza hook muerto", () => {
+  const s = parseScriptText(GOOD.replace("Por que nunca", "Você sabia? Por que nunca"));
+  assert.equal(validateScript(s).ok, false);
+});
+
+test("hookStyleFor rota entre 3 estilos", async () => {
+  const { hookStyleFor } = await import("../jobs/brain.mjs");
+  const styles = new Set([hookStyleFor("2026-10-01"), hookStyleFor("2026-10-02"), hookStyleFor("2026-10-03")]);
+  assert.equal(styles.size, 3);
+});
+
+test("factOverlap detecta deriva de tema", async () => {
+  const { factOverlap } = await import("../lib/schema.mjs");
+  const moonFact = "A Lua completa uma rotacao a cada 27 dias, exatamente o mesmo periodo da sua orbita";
+  const moonScript = "A Lua gira sobre si mesma enquanto orbita a Terra. Ela leva 27 dias para girar.";
+  const octoScript = "O polvo tem tres coracoes e sangue azul de cobre.";
+  assert.equal(factOverlap(moonScript, moonFact, 2), true);
+  assert.equal(factOverlap(octoScript, moonFact, 2), false);
 });
